@@ -5,6 +5,8 @@ import matplotlib.pyplot as plt
 import pydeck as pdk
 import json
 import joblib
+import plotly.express as px
+import plotly.graph_objects as go
 from sklearn.preprocessing import StandardScaler, MinMaxScaler
 
 def format_idr(amount):
@@ -93,6 +95,16 @@ st.title(f"Lelang Ikan {selected_option_title}")
 st.write("""
 """)
 
+## Recommendations
+st.subheader(f"Rekomendasi Harga Lelang Ikan {selected_option_title}: {format_idr(np.exp(prediction.reshape(1, -1))[0][0])}")
+
+## Chart
+# Plot the line chart
+st.subheader(f"Data Historis Ikan {selected_option_title}")
+
+fig = px.line(x=fish_timeseries['transaction_date'], y=fish_timeseries['historical_price'])
+st.plotly_chart(fig, use_container_width=True)
+
 ## Alternative Map with Pydeck
 st.subheader("Lokasi Pelelangan Ikan")
 layer = pdk.Layer(
@@ -111,17 +123,3 @@ view_state = pdk.ViewState(
 )
 r = pdk.Deck(layers=[layer], initial_view_state=view_state)
 st.pydeck_chart(r)
-
-
-## Chart
-# Plot the line chart
-st.subheader(f"Data Historis Ikan {selected_option_title}")
-fig, ax = plt.subplots()
-ax.plot(fish_timeseries['transaction_date'], fish_timeseries['historical_price'])
-ax.set_xlabel('Date')
-ax.set_ylabel('Price')
-ax.set_xticklabels(fish_timeseries['transaction_date'], rotation=45)
-st.pyplot(fig)
-
-## Recommendations
-st.subheader(f"Rekomendasi Harga Lelang Ikan {selected_option_title}: {format_idr(np.exp(prediction.reshape(1, -1))[0][0])}")
