@@ -7,6 +7,15 @@ import json
 import joblib
 from sklearn.preprocessing import StandardScaler, MinMaxScaler
 
+def format_idr(amount):
+    # Add thousands separator
+    formatted_amount = "{:,.0f}".format(amount)
+    # Add 'Rp' prefix
+    formatted_amount = "Rp {}".format(formatted_amount)
+    formatted_amount = formatted_amount.replace(",", ".")
+
+    return formatted_amount
+
 # Data Preparation
 ## Load Dataset
 df = pd.read_csv("./ml/dataset/buyung_squad_dataset_v1.csv")
@@ -48,6 +57,7 @@ data_map = pd.DataFrame({
 # Sidebar for user input
 st.sidebar.title("Filter")
 selected_option = st.sidebar.selectbox("Jenis Ikan", fish_product_type)
+selected_option_title = selected_option.title()
 
 # Filter Data
 fish_timeseries = df[df["fish_product_type"] == selected_option].tail(12)
@@ -72,15 +82,14 @@ def preprocess_inference_data(X_data):
     return X_data, minmax_scaler_price
 
 print(df['fish_product_type'].unique())
-# preprocess_df = pd.get_dummies(df, columns=['fish_product_type'], drop_first=False)
-preprocess_df = pd.get_dummies(df, columns=['fish_product_type'], drop_first=True)
+preprocess_df = pd.get_dummies(df, columns=['fish_product_type'], drop_first=False)
 preprocess_df, scaler = preprocess_inference_data(preprocess_df)
 predict_df = preprocess_df[preprocess_df[f"fish_product_type_{selected_option}"] == True].tail(1)
 prediction = model.predict(predict_df)
 
 # Main Dashboard
 ## Title and description
-st.title(f"Lelang Ikan {selected_option}")
+st.title(f"Lelang Ikan {selected_option_title}")
 st.write("""
 """)
 
@@ -106,7 +115,7 @@ st.pydeck_chart(r)
 
 ## Chart
 # Plot the line chart
-st.subheader(f"Data Historis {selected_option}")
+st.subheader(f"Data Historis Ikan {selected_option_title}")
 fig, ax = plt.subplots()
 ax.plot(fish_timeseries['transaction_date'], fish_timeseries['historical_price'])
 ax.set_xlabel('Date')
@@ -115,5 +124,4 @@ ax.set_xticklabels(fish_timeseries['transaction_date'], rotation=45)
 st.pyplot(fig)
 
 ## Recommendations
-st.subheader("Recommendations")
-st.write(scaler.inverse_transform(prediction.reshape(-1, 1))[0])
+st.subheader(f"Rekomendasi Harga Lelang Ikan {selected_option_title}: {format_idr(np.exp(prediction.reshape(1, -1))[0][0])}")
