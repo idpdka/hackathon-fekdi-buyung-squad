@@ -4,14 +4,27 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pydeck as pdk
 import json
+import joblib
+from sklearn.preprocessing import StandardScaler, MinMaxScaler
 
 # Data Preparation
 ## Load Dataset
-fish_names = pd.read_csv("./data/fish/fish_names.csv")['fish_name']
-fish_names_dropdown = {v: k for k, v in fish_names.to_dict().items()}
+df = pd.read_csv("./ml/dataset/buyung_squad_dataset_v1.csv")
+df["transaction_date"] = pd.to_datetime(df["transaction_date"]).dt.date
+df = df.groupby(['transaction_date', "fish_product_type"]).agg({
+    "length_cm": np.mean,
+    "width_cm": np.mean,
+    "height_cm": np.mean,
+    "weight_kg": np.mean,
+    "historical_price": np.mean
+})
+df.reset_index(inplace=True)
+fish_product_type = list(df["fish_product_type"].unique())
+
+model = joblib.load("./ml/model/buyung_squad_xgb_v1.pkl")
 
 ## Create cold storage random point
-with open("./data/cold_storage/provinces.json", 'r') as file:
+with open("./src/data/cold_storage/provinces.json", 'r') as file:
     provinces = json.load(file)
 
 random_lats = np.array([])
@@ -34,11 +47,40 @@ data_map = pd.DataFrame({
 
 # Sidebar for user input
 st.sidebar.title("Filter")
-selected_option = st.sidebar.selectbox("Jenis Ikan", fish_names_dropdown.keys())
+selected_option = st.sidebar.selectbox("Jenis Ikan", fish_product_type)
+
+# Filter Data
+fish_timeseries = df[df["fish_product_type"] == selected_option].tail(12)
+
+def preprocess_inference_data(X_data):
+    # Normalize transaction_date
+    X_data['transaction_date'] = pd.to_datetime(X_data['transaction_date'])
+    X_data['transaction_date'] = X_data['transaction_date'].astype(np.int64) // 10**9  # Convert to seconds since epoch
+
+    # Standardize features
+    scaler = StandardScaler()
+    minmax_scaler_transaction = MinMaxScaler()
+    minmax_scaler_price = MinMaxScaler()
+
+    # Apply standard scaling to length, width, height, weight
+    X_data[['length_cm', 'width_cm', 'height_cm', 'weight_kg']] = scaler.fit_transform(X_data[['length_cm', 'width_cm', 'height_cm', 'weight_kg']])
+
+    # Apply MinMax scaling to transaction_date and historical_price
+    X_data[['transaction_date']] = minmax_scaler_transaction.fit_transform(X_data[['transaction_date']])
+    X_data[['historical_price']] = minmax_scaler_price.fit_transform(X_data[['historical_price']])
+
+    return X_data, minmax_scaler_price
+
+print(df['fish_product_type'].unique())
+# preprocess_df = pd.get_dummies(df, columns=['fish_product_type'], drop_first=False)
+preprocess_df = pd.get_dummies(df, columns=['fish_product_type'], drop_first=True)
+preprocess_df, scaler = preprocess_inference_data(preprocess_df)
+predict_df = preprocess_df[preprocess_df[f"fish_product_type_{selected_option}"] == True].tail(1)
+prediction = model.predict(predict_df)
 
 # Main Dashboard
 ## Title and description
-st.title(f"Lelang Ikan {fish_names[fish_names_dropdown[selected_option]]}")
+st.title(f"Lelang Ikan {selected_option}")
 st.write("""
 """)
 
@@ -61,23 +103,17 @@ view_state = pdk.ViewState(
 r = pdk.Deck(layers=[layer], initial_view_state=view_state)
 st.pydeck_chart(r)
 
-## Sample data for the chart
-data_chart = pd.DataFrame({
-    'Category': ['A', 'B', 'C', 'D'],
-    'Values': np.random.randint(1, 100, 4)
-})
 
 ## Chart
-st.subheader("Sample Chart")
+# Plot the line chart
+st.subheader(f"Data Historis {selected_option}")
 fig, ax = plt.subplots()
-ax.bar(data_chart['Category'], data_chart['Values'])
+ax.plot(fish_timeseries['transaction_date'], fish_timeseries['historical_price'])
+ax.set_xlabel('Date')
+ax.set_ylabel('Price')
+ax.set_xticklabels(fish_timeseries['transaction_date'], rotation=45)
 st.pyplot(fig)
 
 ## Recommendations
 st.subheader("Recommendations")
-if selected_option == "Option 1":
-    st.write("Recommendation for Option 1: Consider increasing the values for Category A.")
-elif selected_option == "Option 2":
-    st.write("Recommendation for Option 2: Monitor the values for Category B.")
-else:
-    st.write("Recommendation for Option 3: Category C and D are performing well.")
+st.write(scaler.inverse_transform(prediction.reshape(-1, 1))[0])
