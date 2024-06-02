@@ -29,7 +29,6 @@ df = df.groupby(['transaction_date', "fish_product_type"]).agg({
 df.reset_index(inplace=True)
 
 cold_storage_positions = pd.read_csv("./position/position.csv")
-
 fish_product_type = list(df["fish_product_type"].unique())
 xgboost_model = joblib.load("./ml/model/buyung_squad_xgb_v1.pkl")
 linear_regression_model = joblib.load("./ml/model/buyung_squad_lr_v1.pkl") 
@@ -48,22 +47,30 @@ with st.container(border=True):
     ''')
 
     models = pd.DataFrame.from_dict([
-        {"model_name": "XGBoost", "Accuracy": "90%", "MAE": "90%"},
-        {"model_name": "Linear Regression", "Accuracy": "90%", "MAE": "90%"},
+        {"Nama Model": "XGBoost", "Akurasi": "90%", "MAE": "90%"},
+        {"Nama Model": "Linear Regression", "Akurasi": "90%", "MAE": "90%"},
     ])
 
     st.table(models)
-    selected_fish = st.selectbox(
-        "Silakan memilih jenis ikan yang anda inginkan:",
-        fish_product_type
-    )
-    selected_model = st.selectbox(
-        "Silakan memilih model yang anda inginkan:",
-        ("XGBoost", "Linear Regression")
-    )
+
+    fish_selector_col, model_selector_col = st.columns(2)
+
+    with fish_selector_col:
+        selected_fish = st.selectbox(
+            "Silakan memilih jenis ikan yang anda inginkan:",
+            fish_product_type
+        )
+    
+    with model_selector_col:
+        selected_model = st.selectbox(
+            "Silakan memilih model yang anda inginkan:",
+            ("XGBoost", "Linear Regression")
+        )
 
     selected_fish_title = selected_fish.title()
+    fish_timeseries = df[df["fish_product_type"] == selected_fish].tail(12)
     preprocess_df = pd.get_dummies(df, columns=['fish_product_type'], drop_first=False)
+
     preprocess_df, scaler = preprocess_inference_data(preprocess_df)
     predict_df = preprocess_df[preprocess_df[f"fish_product_type_{selected_fish}"] == True].tail(1)
     prediction = model.predict(predict_df)
@@ -74,13 +81,15 @@ with st.container(border=True):
         prediction = get_prediction(linear_regression_model, df, selected_fish) 
 
     with st.container(border=True):
-        recommendation_col = st.columns(1)
-        st.metric(f"Ikan {selected_fish_title}, model {selected_model}", f"{format_idr(np.exp(prediction.reshape(1, -1))[0][0])}", "+15.5%")
+        recommendation_price = np.exp(prediction.reshape(1, -1))[0][0]
+        previous_price = fish_timeseries['historical_price'].tail(1).item()
+        price_diff = round((recommendation_price - previous_price) / previous_price * 100, 2)
+
+        st.metric(f"Ikan {selected_fish_title}, model {selected_model}", f"{format_idr(recommendation_price)}", f"{price_diff}%")
 
 ## Chart
 # Plot the line chart
 with st.container(border=True):
-    fish_timeseries = df[df["fish_product_type"] == selected_fish].tail(12)
     st.header(f"Data Historis Ikan {selected_fish_title}", divider='grey')
 
     with st.container(border=True):
@@ -113,5 +122,4 @@ with st.container(border=True):
             ).add_to(m)
 
         # Display the map in Streamlit
-        st.title("Warehouse Stock Levels in Aceh")
         st_folium(m, width=700, height=500)
