@@ -37,7 +37,8 @@ linear_regression_model = joblib.load("./ml/model/buyung_squad_lr_v1.pkl")
 
 # Main Dashboard
 ## Title and description
-st.title(f"Buyung Squad: Lelang Ikan Digital")
+st.title(f"LeID: Lelang Ikan Digital")
+st.caption("Made with :heart:, Buyung Squad")
 
 ## Recommendations
 with st.container(border=True):
