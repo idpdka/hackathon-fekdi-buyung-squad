@@ -94,8 +94,9 @@ with st.container(border=True):
 
     with st.container(border=True):
         fig = px.line(
-            x=fish_timeseries['transaction_date'],
-            y=fish_timeseries['historical_price']
+            fish_timeseries,
+            x='transaction_date',
+            y='historical_price'
         )
         st.plotly_chart(fig, use_container_width=True)
 
@@ -103,7 +104,7 @@ with st.container(border=True):
     st.header('Lokasi Pelelangan Ikan', divider='grey')
 
     with st.container(border=True):
-        m = folium.Map(location=[-2.548926, 118.0148634], zoom_start=5)
+        m = folium.Map(location=[-7.4015301, 111.3630878], zoom_start=7.5)
 
         # Add markers to the map
         for _, row in cold_storage_positions.iterrows():
