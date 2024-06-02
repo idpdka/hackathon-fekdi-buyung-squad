@@ -4,7 +4,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler, MinMaxScaler
 
 np.random.seed(42)  # For reproducibility
-n_samples = 1_000 
+n_samples = 50_000 
 
 def generate_generic_dataset():
     # Generate Dummy Data with 10,000 rows

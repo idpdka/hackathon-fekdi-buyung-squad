@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 from sklearn.model_selection import GridSearchCV
-from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
+from sklearn.metrics import mean_absolute_percentage_error, root_mean_squared_error, mean_squared_error, r2_score
 import xgboost as xgb
 import joblib
 
@@ -48,14 +48,24 @@ best_xgb_model = grid_search.best_estimator_
 joblib.dump(best_xgb_model, 'model/buyung_squad_xgb_v1.pkl')
 
 y_val_pred_xgb = best_xgb_model.predict(X_val)
+validation_performance = pd.DataFrame.from_dict([{
+    'mape': mean_absolute_percentage_error(y_val, y_val_pred_xgb),
+    'mse': mean_squared_error(y_val, y_val_pred_xgb),
+    'rmse': root_mean_squared_error(y_val, y_val_pred_xgb),
+    "r2": r2_score(y_val, y_val_pred_xgb),
+}])
 print("XGBoost Validation Performance:")
-print(f"MAE: {mean_absolute_error(y_val, y_val_pred_xgb):.2f}")
-print(f"MSE: {mean_squared_error(y_val, y_val_pred_xgb):.2f}")
-print(f"R2: {r2_score(y_val, y_val_pred_xgb):.2f}")
+print(validation_performance.head())
 
 y_test_pred_xgb = best_xgb_model.predict(X_test)
+test_performance = pd.DataFrame.from_dict([{
+    'mape': mean_absolute_percentage_error(y_test, y_test_pred_xgb),
+    'mse': mean_squared_error(y_test, y_test_pred_xgb),
+    'rmse': root_mean_squared_error(y_test, y_test_pred_xgb),
+    "r2": r2_score(y_test, y_test_pred_xgb),
+}])
 print("XGBoost Test Performance:")
-print(f"MAE: {mean_absolute_error(y_test, y_test_pred_xgb):.2f}")
-print(f"MSE: {mean_squared_error(y_test, y_test_pred_xgb):.2f}")
-print(f"R2: {r2_score(y_test, y_test_pred_xgb):.2f}")
+print(test_performance.head())
 
+validation_performance.to_csv('model/xgboost_validation_performance.csv')
+test_performance.to_csv('model/xgboost_test_performance.csv')
