@@ -1,16 +1,19 @@
+import io
 import streamlit as st
 import folium
 import pandas as pd
 import numpy as np
-import matplotlib.pyplot as plt
-import pydeck as pdk
-import json
 import joblib
 import plotly.express as px
-import plotly.graph_objects as go
+import imageio as iio
 
-from utils import format_idr, get_marker_color, preprocess_inference_data, get_prediction, get_historical_data
+from utils import format_idr, get_marker_color, get_prediction, get_historical_data
 from streamlit_folium import st_folium
+
+@st.experimental_dialog(f"Lanjutkan Pembayaran")
+def bid():
+    st.write(f"Ikan {selected_fish} dengan harga {format_idr(recommendation_price)}")
+    st.image("./src/modules/dashboard/handler/ssr/qris_example.jpg", caption=f'QR Code untuk: {selected_fish}', use_column_width=True)
 
 # Load Model
 model = joblib.load("./ml/model/buyung_squad_xgb_v1.pkl")
@@ -84,6 +87,9 @@ with st.container(border=True):
         price_diff = round((recommendation_price - previous_price) / previous_price * 100, 2)
 
         st.metric(f"Ikan {selected_fish_title}, model {selected_model}", f"{format_idr(recommendation_price)}", f"{price_diff}%")
+    
+        if st.button("Beli"):
+            bid()
 
 ## Chart
 # Plot the line chart

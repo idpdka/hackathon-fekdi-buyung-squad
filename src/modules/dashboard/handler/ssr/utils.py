@@ -2,6 +2,11 @@ import pandas as pd
 import numpy as np
 import calendar
 from datetime import datetime
+import qrcode
+from PIL import Image
+import io
+import random
+import string
 
 from sklearn.preprocessing import StandardScaler, MinMaxScaler
 
@@ -69,3 +74,17 @@ def get_historical_data(df, selected_fish, freq='Harian'):
         historical_data.reset_index(inplace=True)
     
     return historical_data
+
+def generate_random_qr():
+    random_string = ''.join(random.choices(string.ascii_uppercase + string.digits, k=10))
+    qr = qrcode.QRCode(
+        version=1,
+        error_correction=qrcode.constants.ERROR_CORRECT_L,
+        box_size=10,
+        border=4,
+    )
+    qr.add_data(random_string)
+    qr.make(fit=True)
+
+    img = qr.make_image(fill='black', back_color='white')
+    return img, random_string
