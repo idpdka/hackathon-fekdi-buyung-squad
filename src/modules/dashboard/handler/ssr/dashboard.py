@@ -45,15 +45,8 @@ with st.container(border=True):
     st.caption('''
         Kami memberikan rekomendasi harga lelang ikan tertentu berdasarkan data historis hasil lelang ikan sebelumnya, dalam periode tertentu.
         Data tersebut kami masukkan ke dalam model _machine learning_ untuk membantu optimisasi dan memberikan rekomendasi harga lelang ikan se-akurat mungkin berdasarkan data yang tersedia.
-        Kami menyediakan beberapa model untuk membantu anda memilih harga lelang terbaik untuk ikan anda, yakni:
+        Kami menyediakan beberapa model untuk membantu anda memilih harga lelang terbaik untuk ikan anda.
     ''')
-
-    models = pd.DataFrame.from_dict([
-        {"Nama Model": "XGBoost", "Akurasi": "90%", "MAE": "90%"},
-        {"Nama Model": "Linear Regression", "Akurasi": "90%", "MAE": "90%"},
-    ])
-
-    st.table(models)
 
     fish_selector_col, model_selector_col = st.columns(2)
 
