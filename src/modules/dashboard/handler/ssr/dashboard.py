@@ -9,7 +9,7 @@ import joblib
 import plotly.express as px
 import plotly.graph_objects as go
 
-from utils import format_idr, get_marker_color, preprocess_inference_data, get_prediction
+from utils import format_idr, get_marker_color, preprocess_inference_data, get_prediction, get_historical_data
 from streamlit_folium import st_folium
 
 # Load Model
@@ -27,6 +27,8 @@ df = df.groupby(['transaction_date', "fish_product_type"]).agg({
     "historical_price": np.mean
 })
 df.reset_index(inplace=True)
+df['month'] = pd.to_datetime(df["transaction_date"]).dt.to_period('M')
+df['year'] = pd.to_datetime(df["transaction_date"]).dt.to_period('Y')
 
 cold_storage_positions = pd.read_csv("./position/position.csv")
 fish_product_type = list(df["fish_product_type"].unique())
@@ -71,10 +73,6 @@ with st.container(border=True):
     fish_timeseries = df[df["fish_product_type"] == selected_fish].tail(12)
     preprocess_df = pd.get_dummies(df, columns=['fish_product_type'], drop_first=False)
 
-    preprocess_df, scaler = preprocess_inference_data(preprocess_df)
-    predict_df = preprocess_df[preprocess_df[f"fish_product_type_{selected_fish}"] == True].tail(1)
-    prediction = model.predict(predict_df)
-
     if selected_model == "XGBoost":
         prediction = get_prediction(xgboost_model, df, selected_fish)
     else:
@@ -92,11 +90,18 @@ with st.container(border=True):
 with st.container(border=True):
     st.header(f"Data Historis Ikan {selected_fish_title}", divider='grey')
 
+    selected_freq= st.selectbox(
+        "Frekuensi:",
+        ("Harian", "Bulanan")
+    )
+    fish_timeseries = get_historical_data(df, selected_fish, selected_freq)
+
     with st.container(border=True):
         fig = px.line(
             fish_timeseries,
             x='transaction_date',
-            y='historical_price'
+            y='historical_price',
+            labels={"transaction_date": "Tanggal", "historical_price": "Harga"}
         )
         st.plotly_chart(fig, use_container_width=True)
 

@@ -1,7 +1,12 @@
 import pandas as pd
 import numpy as np
+import calendar
+from datetime import datetime
 
 from sklearn.preprocessing import StandardScaler, MinMaxScaler
+
+def get_days_in_month(year, month):
+    return calendar.monthrange(year, month)[1]
 
 def format_idr(amount):
     formatted_amount = "{:,.0f}".format(amount)
@@ -41,6 +46,26 @@ def get_prediction(model, df, selected_option):
     preprocess_df = pd.get_dummies(df, columns=['fish_product_type'], drop_first=False)
     preprocess_df, scaler = preprocess_inference_data(preprocess_df)
     predict_df = preprocess_df[preprocess_df[f"fish_product_type_{selected_option}"] == True].tail(1)
+    predict_df.drop(columns=["month", "year"], inplace=True)
     prediction = model.predict(predict_df)
 
     return prediction
+
+def get_historical_data(df, selected_fish, freq='Harian'):
+    if freq=='Bulanan':
+        historical_data = df[df["fish_product_type"] == selected_fish].groupby(df['month']).agg({
+                "historical_price": np.mean
+            }).tail(12)
+        historical_data.reset_index(inplace=True)
+        historical_data.rename(columns={"month":"transaction_date"}, inplace=True)
+        historical_data["transaction_date"] = historical_data["transaction_date"].astype('str')
+    else:
+        historical_data = df[df["fish_product_type"] == selected_fish]
+        last_date = historical_data.iloc[-1]['transaction_date']
+        historical_data = df[df["fish_product_type"] == selected_fish].groupby(df['transaction_date']).agg({
+                "historical_price": np.mean
+            }).tail(get_days_in_month(last_date.year, last_date.month))
+
+        historical_data.reset_index(inplace=True)
+    
+    return historical_data
