@@ -1,4 +1,4 @@
-import io
+import json
 import streamlit as st
 import folium
 import pandas as pd
@@ -104,6 +104,36 @@ with st.container(border=True):
             labels={"transaction_date": "Tanggal", "historical_price": "Harga"}
         )
         st.plotly_chart(fig, use_container_width=True)
+
+with st.container(border=True):
+    # Load JSON data
+    with open('./position/fish_stock.json', 'r') as f:
+        data = json.load(f)
+
+    # Convert JSON data to pandas DataFrame
+    df = pd.DataFrame(data).transpose()
+
+    # Streamlit app
+    st.title(f"Stok Ikan pada Provinsi")
+    # Filter by region
+    regions = list(data.keys())
+    selected_region = st.selectbox("", regions)
+
+    # Plot data for the selected region
+    if selected_region:
+        # st.subheader(f"Stock data for {selected_region}")
+
+        stock_data = data[selected_region]
+        fish_types = list(stock_data.keys())
+        stock_values = list(stock_data.values())
+
+        # Create a bar plot using Plotly
+        fig = px.bar(
+            x=fish_types,
+            y=stock_values,
+            labels={'x': 'Jenis Ikan', 'y': 'Stok'},
+        )
+        st.plotly_chart(fig)
 
 with st.container(border=True):
     st.header('Lokasi Pelelangan Ikan', divider='grey')

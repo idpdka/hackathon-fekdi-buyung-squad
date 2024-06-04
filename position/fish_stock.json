@@ -1,0 +1,240 @@
+{
+    "Aceh": {
+        "Udang": 504,
+        "Tuna": 219,
+        "Bandeng": 189,
+        "Kakap": 407,
+        "Kerapu": 631
+    },
+    "Bali": {
+        "Udang": 645,
+        "Tuna": 26,
+        "Bandeng": 1204,
+        "Kakap": 75,
+        "Kerapu": 370
+    },
+    "Bangka Belitung": {
+        "Udang": 162,
+        "Tuna": 413,
+        "Bandeng": 286,
+        "Kakap": 276,
+        "Kerapu": 713
+    },
+    "Banten": {
+        "Udang": 123,
+        "Tuna": 413,
+        "Bandeng": 20,
+        "Kakap": 9,
+        "Kerapu": 775
+    },
+    "Bengkulu": {
+        "Udang": 366,
+        "Tuna": 768,
+        "Bandeng": 736,
+        "Kakap": 951,
+        "Kerapu": 509
+    },
+    "Gorontalo": {
+        "Udang": 1033,
+        "Tuna": 196,
+        "Bandeng": 5,
+        "Kakap": 69,
+        "Kerapu": 157
+    },
+    "Jakarta Raya": {
+        "Udang": 1738,
+        "Tuna": 84,
+        "Bandeng": 127,
+        "Kakap": 56,
+        "Kerapu": 225
+    },
+    "Jambi": {
+        "Udang": 47,
+        "Tuna": 208,
+        "Bandeng": 830,
+        "Kakap": 244,
+        "Kerapu": 1171
+    },
+    "Jawa Barat": {
+        "Udang": 790,
+        "Tuna": 60,
+        "Bandeng": 261,
+        "Kakap": 918,
+        "Kerapu": 141
+    },
+    "Jawa Tengah": {
+        "Udang": 426,
+        "Tuna": 241,
+        "Bandeng": 158,
+        "Kakap": 319,
+        "Kerapu": 396
+    },
+    "Jawa Timur": {
+        "Udang": 620,
+        "Tuna": 100,
+        "Bandeng": 573,
+        "Kakap": 513,
+        "Kerapu": 234
+    },
+    "Kalimantan Barat": {
+        "Udang": 86,
+        "Tuna": 1095,
+        "Bandeng": 230,
+        "Kakap": 171,
+        "Kerapu": 88
+    },
+    "Kalimantan Selatan": {
+        "Udang": 1084,
+        "Tuna": 6,
+        "Bandeng": 526,
+        "Kakap": 341,
+        "Kerapu": 93
+    },
+    "Kalimantan Tengah": {
+        "Udang": 2,
+        "Tuna": 47,
+        "Bandeng": 249,
+        "Kakap": 893,
+        "Kerapu": 169
+    },
+    "Kalimantan Timur": {
+        "Udang": 99,
+        "Tuna": 456,
+        "Bandeng": 47,
+        "Kakap": 295,
+        "Kerapu": 513
+    },
+    "Kalimantan Utara": {
+        "Udang": 126,
+        "Tuna": 69,
+        "Bandeng": 160,
+        "Kakap": 94,
+        "Kerapu": 1141
+    },
+    "Kepulauan Riau": {
+        "Udang": 321,
+        "Tuna": 723,
+        "Bandeng": 459,
+        "Kakap": 1369,
+        "Kerapu": 818
+    },
+    "Lampung": {
+        "Udang": 12,
+        "Tuna": 380,
+        "Bandeng": 1121,
+        "Kakap": 210,
+        "Kerapu": 397
+    },
+    "Maluku": {
+        "Udang": 462,
+        "Tuna": 288,
+        "Bandeng": 139,
+        "Kakap": 120,
+        "Kerapu": 441
+    },
+    "Maluku Utara": {
+        "Udang": 321,
+        "Tuna": 510,
+        "Bandeng": 1,
+        "Kakap": 208,
+        "Kerapu": 30
+    },
+    "Nusa Tenggara Barat": {
+        "Udang": 250,
+        "Tuna": 1133,
+        "Bandeng": 9,
+        "Kakap": 211,
+        "Kerapu": 257
+    },
+    "Nusa Tenggara Timur": {
+        "Udang": 439,
+        "Tuna": 844,
+        "Bandeng": 116,
+        "Kakap": 532,
+        "Kerapu": 409
+    },
+    "Papua": {
+        "Udang": 730,
+        "Tuna": 234,
+        "Bandeng": 14,
+        "Kakap": 31,
+        "Kerapu": 201
+    },
+    "Papua Barat": {
+        "Udang": 718,
+        "Tuna": 422,
+        "Bandeng": 327,
+        "Kakap": 234,
+        "Kerapu": 459
+    },
+    "Riau": {
+        "Udang": 724,
+        "Tuna": 47,
+        "Bandeng": 716,
+        "Kakap": 74,
+        "Kerapu": 299
+    },
+    "Sulawesi Barat": {
+        "Udang": 1005,
+        "Tuna": 641,
+        "Bandeng": 302,
+        "Kakap": 249,
+        "Kerapu": 43
+    },
+    "Sulawesi Selatan": {
+        "Udang": 3,
+        "Tuna": 164,
+        "Bandeng": 268,
+        "Kakap": 797,
+        "Kerapu": 328
+    },
+    "Sulawesi Tengah": {
+        "Udang": 69,
+        "Tuna": 37,
+        "Bandeng": 692,
+        "Kakap": 615,
+        "Kerapu": 37
+    },
+    "Sulawesi Tenggara": {
+        "Udang": 121,
+        "Tuna": 31,
+        "Bandeng": 1327,
+        "Kakap": 761,
+        "Kerapu": 430
+    },
+    "Sulawesi Utara": {
+        "Udang": 790,
+        "Tuna": 34,
+        "Bandeng": 195,
+        "Kakap": 70,
+        "Kerapu": 91
+    },
+    "Sumatera Barat": {
+        "Udang": 278,
+        "Tuna": 117,
+        "Bandeng": 179,
+        "Kakap": 35,
+        "Kerapu": 391
+    },
+    "Sumatera Selatan": {
+        "Udang": 184,
+        "Tuna": 459,
+        "Bandeng": 197,
+        "Kakap": 349,
+        "Kerapu": 951
+    },
+    "Sumatera Utara": {
+        "Udang": 220,
+        "Tuna": 183,
+        "Bandeng": 437,
+        "Kakap": 443,
+        "Kerapu": 407
+    },
+    "Yogyakarta": {
+        "Udang": 531,
+        "Tuna": 79,
+        "Bandeng": 245,
+        "Kakap": 98,
+        "Kerapu": 467
+    }
+}
