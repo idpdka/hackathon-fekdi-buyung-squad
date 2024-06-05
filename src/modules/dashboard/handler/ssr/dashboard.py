@@ -117,7 +117,7 @@ with st.container(border=True):
     st.title(f"Demand per Jenis Ikan")
     # Filter by region
     regions = list(data.keys())
-    selected_region = st.selectbox("", regions)
+    selected_region = st.selectbox("Provinsi:", regions)
 
     # Plot data for the selected region
     if selected_region:
