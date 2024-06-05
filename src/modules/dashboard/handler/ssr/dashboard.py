@@ -114,7 +114,7 @@ with st.container(border=True):
     df = pd.DataFrame(data).transpose()
 
     # Streamlit app
-    st.title(f"Stok Ikan pada Provinsi")
+    st.title(f"Demand per Jenis Ikan")
     # Filter by region
     regions = list(data.keys())
     selected_region = st.selectbox("", regions)
@@ -131,7 +131,7 @@ with st.container(border=True):
         fig = px.bar(
             x=fish_types,
             y=stock_values,
-            labels={'x': 'Jenis Ikan', 'y': 'Stok'},
+            labels={'x': 'Jenis Ikan', 'y': 'Demand'},
         )
         st.plotly_chart(fig)
 
