@@ -114,7 +114,7 @@ with st.container(border=True):
     df = pd.DataFrame(data).transpose()
 
     # Streamlit app
-    st.title(f"Demand per Jenis Ikan")
+    st.header(f"Demand per Jenis Ikan", divider='grey')
     # Filter by region
     regions = list(data.keys())
     selected_region = st.selectbox("Provinsi:", regions)
